@@ -1,9 +1,10 @@
-interface Body {
+interface Body<TVariables> {
   query: string;
+  variables?: TVariables;
 }
 
 export const server = {
-  fetch: async <TData = any>(body: Body) => {
+  fetch: async <TData = any, TVariables = any>(body: Body<TVariables>) => {
     // const res = await fetch('http://localhost:5000/api');
     // Note: use webpack "proxy" to deal with CORS error
     const res = await fetch('/api', {
