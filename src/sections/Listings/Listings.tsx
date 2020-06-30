@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { server, useQuery, useMutation } from '../../lib/api';
+// import { useQuery, useMutation } from '../../lib/api';
+import { gql } from 'apollo-boost';
+import { useQuery, useMutation } from 'react-apollo';
 import { Listing, ListingData, DeleteListingData, DeleteListingVariables } from './types';
 
-const LISTINGS = `
-  query Listings{
+const LISTINGS = gql`
+  query Listings {
     listings {
       id
       title
@@ -18,8 +20,8 @@ const LISTINGS = `
   }
 `;
 
-const DELETE_LISTING = `
-  mutation DeleteLisitng($id: ID!){
+const DELETE_LISTING = gql`
+  mutation DeleteLisitng($id: ID!) {
     deleteListing(id: $id) {
       id
       title
@@ -31,7 +33,7 @@ const DELETE_LISTING = `
       numOfBaths
       rating
     }
-  } 
+  }
 `;
 
 interface Props {
@@ -62,7 +64,8 @@ const Listings = ({ title }: Props) => {
     //   query: DELETE_LISTING,
     //   variables: { id },
     // });
-    await deleteListing({ id });
+    // await deleteListing({ id });
+    await deleteListing({ variables: { id } });
 
     refetch();
     // fetchListings();
