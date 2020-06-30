@@ -1,11 +1,17 @@
 import { useState, useEffect, useCallback } from 'react';
 import { server } from './server';
+
 interface State<TData> {
   data: TData | null;
   loading: boolean;
   error: boolean;
 }
-export const useQuery = <TData = any>(query: string) => {
+
+interface QueryResult<TData> extends State<TData> {
+  refetch: () => void;
+}
+
+export const useQuery = <TData = any>(query: string): QueryResult<TData> => {
   const [state, setState] = useState<State<TData>>({
     data: null,
     loading: false,
