@@ -1,6 +1,6 @@
-import React from 'react';
-import { server } from '../../lib/api';
-import { ListingData, DeleteListingData, DeleteListingVariables } from './types';
+import React, { useState, useEffect } from 'react';
+import { server, useQuery } from '../../lib/api';
+import { Listing, ListingData, DeleteListingData } from './types';
 
 const LISTINGS = `
   query Listings{
@@ -39,24 +39,57 @@ interface Props {
 }
 
 const Listings = ({ title }: Props) => {
-  const fetchListings = async () => {
-    const response = await server.fetch<ListingData>({ query: LISTINGS });
-    console.log('fetch listings!', response.data);
-  };
+  // const [listings, setListings] = useState<Listing[] | null>(null);
 
-  const deleteListing = async () => {
+  // useEffect(() => {
+  //   console.log('effect has run');
+  //   fetchListings();
+  // }, []);
+
+  // const fetchListings = async () => {
+  //   const { data } = await server.fetch<ListingData>({ query: LISTINGS });
+  //   console.log('fetch listings!', data);
+  //   setListings(data.listings);
+  // };
+  const { data, loading, error, refetch } = useQuery<ListingData>(LISTINGS);
+
+  const deleteListing = async (id: string) => {
     const response = await server.fetch<DeleteListingData>({
       query: DELETE_LISTING,
-      variables: { id: '5ef7fbd3291a27123b4df291' },
+      variables: { id },
     });
     console.log('delete listing', response.data);
+    refetch();
+    // fetchListings();
   };
 
+  const listings = data ? data.listings : null;
+
+  const listingList = listings ? (
+    <ul>
+      {listings.map(listing => {
+        return (
+          <li key={listing.id}>
+            {listing.title}
+            <button onClick={() => deleteListing(listing.id)}>Delete a listing</button>
+          </li>
+        );
+      })}
+    </ul>
+  ) : null;
+
+  if (loading) {
+    return <h2>Loading...</h2>;
+  }
+
+  if (error) {
+    return <h2>Ops. Something went wrong.</h2>;
+  }
   return (
     <div>
       <h2>{title}</h2>
-      <button onClick={fetchListings}>Query listing</button>
-      <button onClick={deleteListing}>Delete a listing</button>
+      {listingList}
+      {/* <button onClick={fetchListings}>Query listing</button> */}
     </div>
   );
 };
