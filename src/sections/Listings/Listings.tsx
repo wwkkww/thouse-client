@@ -2,7 +2,12 @@ import React, { useState, useEffect } from 'react';
 // import { useQuery, useMutation } from '../../lib/api';
 import { gql } from 'apollo-boost';
 import { useQuery, useMutation } from 'react-apollo';
-import { Listing, ListingData, DeleteListingData, DeleteListingVariables } from './types';
+// import { Listing, ListingData, DeleteListingData, DeleteListingVariables } from './types';
+import { Listings as ListingData } from './__generated__/Listings';
+import {
+  DeleteListing as DeleteListingData,
+  DeleteListingVariables,
+} from './__generated__/DeleteListing';
 
 const LISTINGS = gql`
   query Listings {
@@ -21,7 +26,7 @@ const LISTINGS = gql`
 `;
 
 const DELETE_LISTING = gql`
-  mutation DeleteLisitng($id: ID!) {
+  mutation DeleteListing($id: ID!) {
     deleteListing(id: $id) {
       id
       title
