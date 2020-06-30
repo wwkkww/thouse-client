@@ -4,17 +4,16 @@ import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
 import { Listings } from './sections';
 import * as serviceWorker from './serviceWorker';
+import './styles/index.css';
 
 const client = new ApolloClient({
   uri: '/api',
 });
 
 ReactDOM.render(
-  <React.StrictMode>
-    <ApolloProvider client={client}>
-      <Listings title={'Tiny House App!'} />
-    </ApolloProvider>
-  </React.StrictMode>,
+  <ApolloProvider client={client}>
+    <Listings title={'Tiny House App!'} />
+  </ApolloProvider>,
   document.getElementById('root')
 );
 
