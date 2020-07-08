@@ -14,9 +14,18 @@ import {
   LoginVariables,
 } from './lib/graphql/mutations/Login/__generated__/Login';
 import { AppHeaderSkeleton, ErrorBanner } from './lib/components';
+import Operation from 'antd/lib/transfer/operation';
 
 const client = new ApolloClient({
   uri: '/api',
+  request: async operation => {
+    const token = sessionStorage.getItem('token');
+    operation.setContext({
+      headers: {
+        'X-CSRF-TOKEN': token || '',
+      },
+    });
+  },
 });
 
 const initialViewer: Viewer = {
@@ -33,6 +42,12 @@ const App = () => {
     onCompleted: data => {
       if (data && data.login) {
         setViewer(data.login);
+      }
+
+      if (data.login.token) {
+        sessionStorage.setItem('token', data.login.token);
+      } else {
+        sessionStorage.removeItem('token');
       }
     },
   });

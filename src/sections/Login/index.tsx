@@ -29,8 +29,9 @@ export const Login = ({ setViewer }: Props) => {
     LoginVariables
   >(LOGIN, {
     onCompleted: data => {
-      if (data && data.login) {
+      if (data && data.login && data.login.token) {
         setViewer(data.login);
+        sessionStorage.setItem('token', data.login.token);
         displaySuccessNotification("You've successfully login!");
       }
     },
